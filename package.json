@@ -1,0 +1,29 @@
+{
+  "name": "node-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "start": "node --experimental-modules src/server.js ",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^2.20.1",
+    "dateformat": "^4.5.1",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.16",
+    "parse-json": "^5.2.0",
+    "require-dir": "^1.2.0",
+    "routes": "^2.1.0",
+    "soap": "^0.36.0",
+    "swagger-jsdoc": "^6.0.1",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

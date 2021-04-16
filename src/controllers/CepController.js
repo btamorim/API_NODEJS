@@ -158,7 +158,7 @@ module.exports = {
                     return res.status(400).json({'error': {'msg': err}});
 
                dt = new Date(result.return);
-               let formatted = dateFormat(dt,'d/mm/yyyy h:MM:ss');
+               let formatted = dateFormat(dt,'d/mm/yyyy H:MM:ss');
                 return res.json({'data': {'data_hora': formatted}});
             });
             

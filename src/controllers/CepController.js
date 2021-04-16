@@ -80,53 +80,86 @@ module.exports = {
         cep = req.params.cep;
         if(cep.length === 8){
 
-        soap.createClient(url, function(err, client) {
-            if(err) 
-                return res.status(400).json({'error': {'msg': err}});
-
-            client.consultaCEP( {'cep':cep}, function(err, result) {
+            soap.createClient(url, function(err, client) {
                 if(err) 
                     return res.status(400).json({'error': {'msg': err}});
-                return res.json({'data':   result.return});
-            });
-            
-        }); 
-    }else{
-        return res.status(400).json({'error': {'msg': "CEP informado não existe ou está incorreto"}});
-    }
+
+                client.consultaCEP( {'cep':cep}, function(err, result) {
+                    if(err) 
+                        return res.status(400).json({'error': {'msg': err}});
+
+                    return res.json({'data':   result.return});
+                });
+                
+            }); 
+         }else{
+            return res.status(400).json({'error': {'msg': "CEP informado não existe ou está incorreto"}});
+        }
 
     },
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     dataAtual:
+ *       type: object
+ *       required:
+ *       properties:
+ *       example:
+ *             
+ */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     saidaDataAtual:
+ *       type: object
+ *       properties:
+ *         data:
+ *           type: object
+ *           description: objeto com a data
+ *         data_hora:
+ *           type: string
+ *           description: data e hora do sistema
+ *       example:
+ *         data: 
+ *          data_hora: "string"       
+ */
+/**
+ * @swagger
  * /dataAtual:
  *   get:
- *     summary: busca a data do sistema dos correios em formato pt_BR
+ *     summary: busca data e hora do sistema dos correios
  *     tags: [CEP]
  *     parameters:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/dataAtual'
  *     responses:
  *       200:
- *         description: Data atual do sistema dos correios
- *         contens:
- *           application/json:
+ *         description: mostra a data e hora do sistema
+ *         content:
+ *            application/json:
  *             schema:
- *               $ref: '#/components/schemas/CEP'
+ *               $ref: '#/components/schemas/saidaDataAtual'
  *       404:
  *         description: Sistema fora do ar.
- */
-    async dataAtual(req, res){ 
+ */    
+
+
+    async dataAtual(req, res){
         soap.createClient(url, function(err, client) {
             if(err) 
-                return res.status(400).json({'error': {'msg': err}});
-
-            client.buscaDataAtual(  function(err, result) {
+                return res.status(400).json({'error': {'msg': err}})
+            client.buscaDataAtual( {}, function(err, result) {
                 if(err) 
                     return res.status(400).json({'error': {'msg': err}});
 
-                dt = new Date(result.return).toLocaleDateString("pt-BR")
-                
-                var formatted = dateFormat(dt,'d/m/yyyy H:M:s');
-                return res.json({'data': formatted});
+               dt = new Date(result.return);
+               let formatted = dateFormat(dt,'d/mm/yyyy h:MM:ss');
+                return res.json({'data': {'data_hora': formatted}});
             });
             
         });
@@ -198,17 +231,16 @@ module.exports = {
  *         description: Sistema fora do ar.
  */    
     async msgParametrizada(req, res){
-        const {codMSG} = req.body;
-        console.log(req.body);
+        const codMSG = req.body.id;
         soap.createClient(url, function(err, client) {
             if(err) 
                 return res.status(400).json({'error': {'msg': err}});
 
-            client.obterMensagemParametrizada({'id': 1}, function(err, result) {
+            client.obterMensagemParametrizada({'id': codMSG}, function(err, result) {
                 if(err) 
                     return res.status(400).json({'error': {'msg': err}});
                
-                return res.json({'data':  result.return});
+                return res.json({'data':  result});
             });
             
         });
